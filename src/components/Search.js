@@ -5,32 +5,36 @@ import axios from 'axios';
 
 export default function Search() {
   const [term, setTerm] = useState('programming');
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    const searchInputHandler = async () => {
-      const { data } = await axios.get(`https://en.wikipedia.org/w/api.php`, {
-        params: {
-          action: 'query',
-          list: 'search',
-          origin: '*',
-          format: 'json',
-          srsearch: term,
-        },
-      });
-      setResults(data.query.search);
-    };
-
-    const timeoutId = setTimeout(() => {
-      if (term) {
-        searchInputHandler();
-      }
-    }, 500);
-
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term);
+    }, 1000);
     return () => {
-      clearTimeout(timeoutId);
+      clearTimeout(timerId);
     };
   }, [term]);
+
+  useEffect(() => {
+    if (debouncedTerm.length) {
+      const searchInputHandler = async () => {
+        const { data } = await axios.get(`https://en.wikipedia.org/w/api.php`, {
+          params: {
+            action: 'query',
+            list: 'search',
+            origin: '*',
+            format: 'json',
+            srsearch: debouncedTerm,
+          },
+        });
+        setResults(data.query.search);
+      };
+
+      searchInputHandler();
+    }
+  }, [debouncedTerm]);
 
   const renderResults = results.map((result) => {
     return (
