@@ -1,26 +1,49 @@
-import Accordion from './components/Accordion';
-import Search from './components/Search';
+import { useState } from 'react';
+// import Accordion from './components/Accordion';
+import Dropdown from './components/Dropdown';
+// import Search from './components/Search';
 
-const items = [
+// const items = [
+//   {
+//     title: 'title 1',
+//     content: 'desc 1',
+//   },
+//   {
+//     title: 'title 2',
+//     content: 'desc 2',
+//   },
+//   {
+//     title: 'title 3',
+//     content: 'desc 3',
+//   },
+// ];
+
+const options = [
   {
-    title: 'title 1',
-    content: 'desc 1',
+    label: 'color red',
+    value: 'red',
   },
   {
-    title: 'title 2',
-    content: 'desc 2',
+    label: 'color blue',
+    value: 'blue',
   },
   {
-    title: 'title 3',
-    content: 'desc 3',
+    label: 'color green',
+    value: 'green',
   },
 ];
 
 function App() {
+  const [selected, setSelected] = useState(options[0]);
   return (
     <div>
       {/* <Accordion items={items} /> */}
-      <Search />
+      {/* <Search /> */}
+      <Dropdown
+        selected={selected}
+        onSelectedChange={setSelected}
+        options={options}
+      />
     </div>
   );
 }
